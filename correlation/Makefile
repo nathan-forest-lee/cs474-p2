@@ -12,7 +12,7 @@ WriteImage.o:	image.h WriteImage.cpp
 image.o:	image.h image.cpp
 	g++ -c $(CFLAGS) image.cpp
 
-Threshold:	image.h image.o ReadImage.o ReadImageHeader.o WriteImage.o \
-		Threshold.cpp
-	g++ -o Threshold $(CFLAGS) image.o ReadImage.o ReadImageHeader.o \
-					WriteImage.o Threshold.cpp
+Correlation:	image.h image.o ReadImage.o ReadImageHeader.o WriteImage.o \
+		Correlation.cpp
+	g++ -o Correlation $(CFLAGS) image.o ReadImage.o ReadImageHeader.o \
+					WriteImage.o Correlation.cpp
