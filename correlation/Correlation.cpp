@@ -12,30 +12,30 @@ int writeImage(char[], ImageType&);
 
 int rows, cols, Q, val, maskVal;
 
-void normalize(ImageType& initImage, vector<int> correlatedVector, ImageType& outputImage) {
-  int max = 0;
-  int min = 1000000000;
-  int value;
+// void normalize(ImageType& initImage, vector<int> correlatedVector, ImageType& outputImage) {
+//   int max = 0;
+//   int min = 1000000000;
+//   int value;
 
-  for (int i = 0; i < rows; i++) {
-    for (int j = 0; j < cols; j++) {
-      value = correlatedVector[i * cols + j];
-      if(value > max) {
-        max = value;
-      }
-      else if(value < min) {
-        min = value;
-      }
-    }
-  }
+//   for (int i = 0; i < rows; i++) {
+//     for (int j = 0; j < cols; j++) {
+//       value = correlatedVector[i * cols + j];
+//       if(value > max) {
+//         max = value;
+//       }
+//       else if(value < min) {
+//         min = value;
+//       }
+//     }
+//   }
 
-  for (int i = 0; i < rows; i++) {
-    for (int j = 0; j < cols; j++) {
-      double scaledValue = 255.0 * ((correlatedVector[i*cols + j] - min) / (double)(max - min));
-      outputImage.setPixelVal(i, j, (int)scaledValue);
-    }
-  }
-}
+//   for (int i = 0; i < rows; i++) {
+//     for (int j = 0; j < cols; j++) {
+//       double scaledValue = 255.0 * ((correlatedVector[i*cols + j] - min) / (double)(max - min));
+//       outputImage.setPixelVal(i, j, (int)scaledValue);
+//     }
+//   }
+// }
 
 
 
@@ -50,18 +50,20 @@ void correlate(ImageType& initImage, ImageType& maskImage, int maskHeight, int m
         for (int l = -maskWidth / 2; l < maskWidth / 2; l++) {
           if(i + k < 0 || i + k == maskWidth || j + l < 0 || j + l == maskHeight) {
             sum += 0;
+            cout << "shit";
           }
           else {
             initImage.getPixelVal((i + k), (j + l), val);
-            maskImage.getPixelVal((k + maskHeight / 2), (l + maskWidth / 2), maskVal);
-            sum += val * maskVal;
+            // cout << val;
+            // maskImage.getPixelVal((k + maskHeight / 2), (l + maskWidth / 2), maskVal);
+            // sum += val * maskVal;
           }
         }
       }
-      correlationVector.push_back(sum);
+      // correlationVector.push_back(sum);
     }
   }
-  normalize(initImage, correlationVector, outputImage);
+  // normalize(initImage, correlationVector, outputImage);
 }
 
 
