@@ -10,16 +10,61 @@ int readImageHeader(char[], int&, int&, int&, bool&);
 int readImage(char[], ImageType&);
 int writeImage(char[], ImageType&);
 
-int rows, cols, Q, val;
-void correlate(ImageType& initImage, ImageType& maskImage, int maskHeight, int maskWidth) {
+int rows, cols, Q, val, maskVal;
+
+void normalize(ImageType& initImage, vector<int> correlatedVector, ImageType& outputImage) {
+  int max = 0;
+  int min = 1000000000;
+  int value;
+
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+      value = correlatedVector[i * cols + j];
+      if(value > max) {
+        max = value;
+      }
+      else if(value < min) {
+        min = value;
+      }
+    }
+  }
+
+  for (int i = 0; i < rows; i++) {
+    for (int j = 0; j < cols; j++) {
+      double scaledValue = 255.0 * ((correlatedVector[i*cols + j] - min) / (double)(max - min));
+      outputImage.setPixelVal(i, j, (int)scaledValue);
+    }
+  }
+}
+
+
+
+void correlate(ImageType& initImage, ImageType& maskImage, int maskHeight, int maskWidth, ImageType& outputImage) {
   vector<int> correlationVector;
 
   for (int i = 0; i < rows; i++) {
     for (int j = 0; j < cols; j++) {
-      cout << "poop";
+      int sum = 0;
+
+      for (int k = -maskHeight / 2; k < maskHeight / 2; k++) {
+        for (int l = -maskWidth / 2; l < maskWidth / 2; l++) {
+          if(i + k < 0 || i + k == maskWidth || j + l < 0 || j + l == maskHeight) {
+            sum += 0;
+          }
+          else {
+            initImage.getPixelVal((i + k), (j + l), val);
+            maskImage.getPixelVal((k + maskHeight / 2), (l + maskWidth / 2), maskVal);
+            sum += val * maskVal;
+          }
+        }
+      }
+      correlationVector.push_back(sum);
     }
   }
+  normalize(initImage, correlationVector, outputImage);
 }
+
+
 
 int main(int argc, char *argv[])
 {
@@ -38,40 +83,12 @@ int main(int argc, char *argv[])
   ImageType maskImage(maskRows, maskCols, maskQ);
   readImage(argv[2], maskImage);
 
-  correlate(initImage, maskImage, maskRows, maskCols);
+  ImageType outputImage(rows, cols, Q);
 
-    //  int i, j;
-  //  int M, N, Q;
-  //  bool type;
-  //  int val;
-  //  int thresh;
+  correlate(initImage, maskImage, maskRows, maskCols, outputImage);
 
-  //  // read image header
-  //  readImageHeader(argv[1], N, M, Q, type);
+  writeImage(argv[3], outputImage);
 
-  //  // allocate memory for the image array
-
-  //  ImageType image(N, M, Q);
-
-  //  // read image
-  //  readImage(argv[1], image);
-
-  //  cout << "Enter threshold: ";
-  //  cin >> thresh;
-
-  //  // threshold image
-
-  //  for(i=0; i<N; i++)
-  //    for(j=0; j<M; j++) {
-  //      image.getPixelVal(i, j, val);
-  //      if(val < thresh)
-  //        image.setPixelVal(i, j, 255);
-  //      else
-  //        image.setPixelVal(i, j, 0);
-  //     }
-
-  //  // write image
-  //  writeImage(argv[2], image);
 
   return (1);
 }
