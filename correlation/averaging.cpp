@@ -16,14 +16,16 @@ int rows, cols, Q, val, maskVal;
 
 void setValues(ImageType &initImage, vector<int> averageVector, ImageType &outputImage)
 {
-  for (int i = 0; i < rows; i++) {
-    for (int j = 0; j < cols; j++) {
-      outputImage.setPixelVal(i, j, averageVector[i*cols + j]);
+  for (int i = 0; i < rows; i++)
+  {
+    for (int j = 0; j < cols; j++)
+    {
+      outputImage.setPixelVal(i, j, averageVector[i * cols + j]);
     }
   }
 }
 
-void average(ImageType &initImage,  int maskHeight, int maskWidth, ImageType &outputImage)
+void average(ImageType &initImage, int maskHeight, int maskWidth, ImageType &outputImage)
 {
   vector<int> averageVector;
   int halfMaskHeight = maskHeight / 2;
@@ -47,7 +49,6 @@ void average(ImageType &initImage,  int maskHeight, int maskWidth, ImageType &ou
             {
               initImage.getPixelVal((i + k), (j + l), val);
               sum += val / (maskHeight * maskWidth);
-              
             }
           }
         }

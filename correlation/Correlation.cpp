@@ -21,21 +21,27 @@ void normalize(ImageType &initImage, vector<int> correlatedVector, ImageType &ou
   int value;
   cout << "sit";
 
-  for (int i = 0; i < rows; i++) {
-    for (int j = 0; j < cols; j++) {
+  for (int i = 0; i < rows; i++)
+  {
+    for (int j = 0; j < cols; j++)
+    {
       value = correlatedVector[i * cols + j];
-      if(value > max) {
+      if (value > max)
+      {
         max = value;
       }
-      else if(value < min) {
+      else if (value < min)
+      {
         min = value;
       }
     }
   }
 
-  for (int i = 0; i < rows; i++) {
-    for (int j = 0; j < cols; j++) {
-      double scaledValue = 255.0 * ((correlatedVector[i*cols + j] - min) / (double)(max - min));
+  for (int i = 0; i < rows; i++)
+  {
+    for (int j = 0; j < cols; j++)
+    {
+      double scaledValue = 255.0 * ((correlatedVector[i * cols + j] - min) / (double)(max - min));
       outputImage.setPixelVal(i, j, (int)scaledValue);
     }
   }
