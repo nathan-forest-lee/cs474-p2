@@ -36,3 +36,8 @@ unsharpMasking:	image.h image.o ReadImage.o ReadImageHeader.o WriteImage.o \
 		unsharpMasking.cpp
 	g++ -o unsharpMasking $(CFLAGS) image.o ReadImage.o ReadImageHeader.o \
 					WriteImage.o unsharpMasking.cpp
+
+highBoost:	image.h image.o ReadImage.o ReadImageHeader.o WriteImage.o \
+		highBoost.cpp
+	g++ -o highBoost $(CFLAGS) image.o ReadImage.o ReadImageHeader.o \
+					WriteImage.o highBoost.cpp
