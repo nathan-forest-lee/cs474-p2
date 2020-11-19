@@ -31,3 +31,8 @@ median:	image.h image.o ReadImage.o ReadImageHeader.o WriteImage.o \
 		median.cpp
 	g++ -o median $(CFLAGS) image.o ReadImage.o ReadImageHeader.o \
 					WriteImage.o median.cpp
+
+unsharpMasking:	image.h image.o ReadImage.o ReadImageHeader.o WriteImage.o \
+		unsharpMasking.cpp
+	g++ -o unsharpMasking $(CFLAGS) image.o ReadImage.o ReadImageHeader.o \
+					WriteImage.o unsharpMasking.cpp
