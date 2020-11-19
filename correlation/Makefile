@@ -26,3 +26,8 @@ Correlation:	image.h image.o ReadImage.o ReadImageHeader.o WriteImage.o \
 		Correlation.cpp
 	g++ -o Correlation $(CFLAGS) image.o ReadImage.o ReadImageHeader.o \
 					WriteImage.o Correlation.cpp
+
+median:	image.h image.o ReadImage.o ReadImageHeader.o WriteImage.o \
+		median.cpp
+	g++ -o median $(CFLAGS) image.o ReadImage.o ReadImageHeader.o \
+					WriteImage.o median.cpp
