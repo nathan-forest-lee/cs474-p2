@@ -46,3 +46,8 @@ gradient:	image.h image.o ReadImage.o ReadImageHeader.o WriteImage.o \
 		gradient.cpp
 	g++ -o gradient $(CFLAGS) image.o ReadImage.o ReadImageHeader.o \
 					WriteImage.o gradient.cpp
+
+laplacian:	image.h image.o ReadImage.o ReadImageHeader.o WriteImage.o \
+		laplacian.cpp
+	g++ -o laplacian $(CFLAGS) image.o ReadImage.o ReadImageHeader.o \
+					WriteImage.o laplacian.cpp
