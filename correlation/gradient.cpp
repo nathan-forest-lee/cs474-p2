@@ -7,25 +7,26 @@
 using namespace std;
 
 #include "image.h"
+#include "gradientMasks.cpp"
 
 int readImageHeader(char[], int &, int &, int &, bool &);
 int readImage(char[], ImageType &);
 int writeImage(char[], ImageType &);
 
-int rows, cols, Q, val, maskVal;
+int rows, cols, Q, val;
+double maskVal, testVal;
 
-void normalize(ImageType &initImage, vector<int> correlatedVector, ImageType &outputImage)
+void setGradientValue(ImageType &initImage, vector<double> gradientVector, ImageType &outputImage)
 {
   int max = 0;
   int min = 1000000000;
   int value;
-  cout << "sit";
 
   for (int i = 0; i < rows; i++)
   {
     for (int j = 0; j < cols; j++)
     {
-      value = correlatedVector[i * cols + j];
+      value = gradientVector[i * cols + j];
       if (value > max)
       {
         max = value;
@@ -37,31 +38,34 @@ void normalize(ImageType &initImage, vector<int> correlatedVector, ImageType &ou
     }
   }
 
+  // max = max / 2;
   for (int i = 0; i < rows; i++)
   {
     for (int j = 0; j < cols; j++)
     {
-      double scaledValue = 255.0 * ((correlatedVector[i * cols + j] - min) / (double)(max - min));
-      outputImage.setPixelVal(i, j, (int)scaledValue);
+      double scaledValue = 255.0 * ((gradientVector[i * cols + j] - min) / (double)(max - min));
+      cout << (int)scaledValue << endl;
+      outputImage.setPixelVal(i, j, (int)gradientVector[i * cols + j]);
     }
   }
 }
 
-void correlate(ImageType &initImage, ImageType &maskImage, int maskHeight, int maskWidth, ImageType &outputImage)
+void getGradient(ImageType &initImage, ImageType &outputImage, bool isX)
 {
-  vector<int> correlationVector;
-  maskHeight = maskHeight / 2;
-  maskWidth = maskWidth / 2;
+  vector<double> gradientVector;
+  const int maskHeight = 3, maskWidth = 3;
+  int halfMaskHeight = maskHeight / 2;
+  int halfMaskWidth = maskWidth / 2;
 
   for (int i = 0; i < rows; i++)
   {
     for (int j = 0; j < cols; j++)
     {
       {
-        int sum = 0;
-        for (int k = -maskHeight; k < maskHeight; k++)
+        double sum = 0.0;
+        for (int k = -halfMaskHeight; k < halfMaskHeight; k++)
         {
-          for (int l = -maskWidth; l < maskWidth; l++)
+          for (int l = -halfMaskWidth; l < halfMaskWidth; l++)
           {
             if (i + k < 0 || i + k >= rows || j + l < 0 || j + l >= cols)
             {
@@ -71,17 +75,25 @@ void correlate(ImageType &initImage, ImageType &maskImage, int maskHeight, int m
             {
               initImage.getPixelVal((i + k), (j + l), val);
               // cout << val;
-              maskImage.getPixelVal((k + maskHeight), (l + maskWidth), maskVal);
+              if (isX)
+              {
+                maskVal = prewittX[k + halfMaskHeight][l + halfMaskWidth];
+              }
+              else
+              {
+                maskVal = prewittY[k + halfMaskHeight][l + halfMaskWidth];
+              }
               sum += val * maskVal;
               // cout << sum << endl;
             }
           }
         }
-        correlationVector.push_back(sum);
+        // cout << sum << endl;
+        gradientVector.push_back(sum);
       }
     }
   }
-  normalize(initImage, correlationVector, outputImage);
+  setGradientValue(initImage, gradientVector, outputImage);
 }
 
 int main(int argc, char *argv[])
@@ -89,23 +101,25 @@ int main(int argc, char *argv[])
   // int rows, cols, Q, val;
   bool type;
   int maskRows, maskCols, maskQ;
-  bool maskType;
+  bool maskType, isX;
 
   //for the initial image
   readImageHeader(argv[1], rows, cols, Q, type);
   ImageType initImage(rows, cols, Q);
   readImage(argv[1], initImage);
 
-  //for the mask image
-  readImageHeader(argv[2], maskRows, maskCols, maskQ, maskType);
-  ImageType maskImage(maskRows, maskCols, maskQ);
-  readImage(argv[2], maskImage);
+  ImageType yGrad(rows, cols, Q);
+  ImageType xGrad(rows, cols, Q);
+  ImageType gradImage(rows, cols, Q);
 
-  ImageType outputImage(rows, cols, Q);
+  getGradient(initImage, xGrad, 1);
+  writeImage(argv[2], xGrad);
 
-  correlate(initImage, maskImage, maskRows, maskCols, outputImage);
+  getGradient(initImage, yGrad, 0);
+  writeImage(argv[3], yGrad);
 
-  writeImage(argv[3], outputImage);
+  // final function here
+  // writeImage(argv[4], gradImage);
 
   return (1);
 }

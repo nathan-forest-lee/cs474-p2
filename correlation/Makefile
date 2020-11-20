@@ -41,3 +41,8 @@ highBoost:	image.h image.o ReadImage.o ReadImageHeader.o WriteImage.o \
 		highBoost.cpp
 	g++ -o highBoost $(CFLAGS) image.o ReadImage.o ReadImageHeader.o \
 					WriteImage.o highBoost.cpp
+
+gradient:	image.h image.o ReadImage.o ReadImageHeader.o WriteImage.o \
+		gradient.cpp
+	g++ -o gradient $(CFLAGS) image.o ReadImage.o ReadImageHeader.o \
+					WriteImage.o gradient.cpp
