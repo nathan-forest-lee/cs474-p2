@@ -1,2 +1,2 @@
 # cs474-p2
-project 2
+spatial filtering: correlation, gaussian, laplacian, gradient, averaging, median.
