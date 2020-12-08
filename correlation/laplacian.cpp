@@ -65,7 +65,7 @@ void setLaplacianValue(ImageType &initImage, vector<double> gradientVector, Imag
     }
   }
 }
-
+//test
 void getLaplacian(ImageType &initImage, ImageType &lapImage)
 {
   vector<double> gradientVector;
